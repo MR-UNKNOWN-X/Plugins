@@ -63,6 +63,8 @@ def load_module(shortname):
         mod.tbot = HellBot
         mod.tgbot = bot.tgbot
         mod.command = command
+        mod.CmdHelp = CmdHelp
+        mod.client_id = client_id
         mod.logger = logging.getLogger(shortname)
         # support for uniborg
         sys.modules["uniborg.util"] = hellbot.utils
@@ -74,7 +76,7 @@ def load_module(shortname):
         mod.delete_hell = delete_hell
         mod.eod = delete_hell
         mod.Var = Config
-        mod.admin_cmd = hell_cmd
+        mod.admin_cmd = admin_cmd
         mod.hell_cmd = hell_cmd
         mod.sudo_cmd = sudo_cmd
         # support for other userbots

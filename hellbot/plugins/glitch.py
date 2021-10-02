@@ -6,8 +6,8 @@
 # Ported from Pyrogram to Telethon by @ForGo10God for †hê Hêllẞø†
 
 # USE WITH CREDITS !!
-
 ##################################
+
 import os
 
 from PIL import Image
@@ -18,8 +18,7 @@ from . import *
 Glitched = Config.TMP_DOWNLOAD_DIRECTORY + "glitch.gif"
 
 
-@bot.on(hell_cmd(pattern="glitch ?(.*)"))
-@bot.on(sudo_cmd(pattern="glitch ?(.*)", allow_sudo=True))
+@hell_cmd(pattern="glitch ?(.*)")
 async def glitch_(event):
     hell = await eor(event, "`Trying to glitch this ...`")
     replied = await event.get_reply_message()
@@ -32,7 +31,7 @@ async def glitch_(event):
             return await eod(hell, "**Invalid Input !!** \n\nPlease enter digits only.")
         input_ = int(inp)
         if not 0 < input_ < 9:
-            return await eod(hell, "**Invalid Range !!** \n\n**Valid Range** - 0 to 9")
+            return await eod(hell, "**Invalid Range !!** \n\n**Valid Range** - 1 to 8")
         args = input_
     else:
         args = 2
@@ -94,7 +93,7 @@ async def glitch_(event):
 
 
 CmdHelp("glitch").add_command(
-  "glitch", "0 to 8", "Glitches the replied gif/sticker/pic/video", "glitch 5 <reply_to_a_media"
+  "glitch", "1 to 8", "Glitches the replied gif/sticker/pic/video.", "glitch 5 <reply_to_a_media>"
 ).add_info(
   "Glitcher"
 ).add_warning(

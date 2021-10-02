@@ -1,11 +1,12 @@
-from math import ceil
-from re import compile
 import asyncio
 import html
 import os
 import re
 import random
 import sys
+
+from math import ceil
+from re import compile
 
 from telethon import Button, custom, events, functions
 from telethon.tl.functions.users import GetFullUserRequest
@@ -93,8 +94,10 @@ def button(page, modules):
 
     modules = CMD_HELP
 if Config.BOT_USERNAME is not None and tgbot is not None:
-    @tgbot.on(InlineQuery)  # pylint:disable=E0602
+    @tgbot.on(InlineQuery)
     async def inline_handler(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         builder = event.builder
         result = None
         query = event.text
@@ -129,27 +132,6 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
                     buttons=veriler[1],
                     link_preview=False,
                 )
-        elif event.query.user_id in auth and query.startswith("fsub"):
-            hunter = event.pattern_match.group(1)
-            hell = hunter.split("+")
-            user = await bot.get_entity(int(hell[0]))
-            channel = await bot.get_entity(int(hell[1]))
-            msg = f"**👋 Welcome** [{user.first_name}](tg://user?id={user.id}), \n\n**📍 You need to Join** {channel.title} **to chat in this group.**"
-            if not channel.username:
-                link = (await bot(ExportChatInviteRequest(channel))).link
-            else:
-                link = "https://t.me/" + channel.username
-            result = [
-                await builder.article(
-                    title="force_sub",
-                    text = msg,
-                    buttons=[
-                        [Button.url(text="Channel", url=link)],
-                        [custom.Button.inline("🔓 Unmute Me", data=unmute)],
-                    ],
-                )
-            ]
-
         elif event.query.user_id in auth and query == "alive":
             uptime = await get_time((time.time() - StartTime))
             alv_msg = gvarstat("ALIVE_MSG") or "»»» <b>нєℓℓвσт ιѕ σиℓιиє</b> «««"
@@ -162,7 +144,7 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
             a = gvarstat("ALIVE_PIC")
             if a is not None:
                 b = a.split(" ")
-                c = ["https://telegra.ph/file/ea9e11f7c9db21c1b8d5e.mp4"]
+                c = []
                 if len(b) >= 1:
                     for d in b:
                         c.append(d)
@@ -257,6 +239,8 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
 
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"pmclick")))
     async def on_pm_click(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         if event.query.user_id in auth:
             reply_pop_up_alert = "This is for Other Users..."
@@ -268,6 +252,8 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
 
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"req")))
     async def on_pm_click(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         if event.query.user_id in auth:
             reply_pop_up_alert = "This is for other users!"
@@ -282,11 +268,13 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
             if first_name is not None:
                 first_name = first_name.replace("\u2060", "")
             tosend = f"**👀 Hey {hell_mention} !!** \n\n⚜️ You Got A Request From [{first_name}](tg://user?id={ok}) In PM!!"
-            await bot.send_message(LOG_GP, tosend)
+            await event.client.send_message(LOG_GP, tosend)
 
 
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"chat")))
     async def on_pm_click(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         event.query.user_id
         if event.query.user_id in auth:
@@ -302,11 +290,13 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
             if first_name is not None:
                 first_name = first_name.replace("\u2060", "")
             tosend = f"**👀 Hey {hell_mention} !!** \n\n⚜️ You Got A PM from  [{first_name}](tg://user?id={ok})  for random chats!!"
-            await bot.send_message(LOG_GP, tosend)
+            await event.client.send_message(LOG_GP, tosend)
 
 
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"heheboi")))
     async def on_pm_click(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         if event.query.user_id in auth:
             reply_pop_up_alert = "This is for other users!"
@@ -315,40 +305,23 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
             await event.edit(
                 f"🥴 **Nikal lawde\nPehli fursat me nikal**"
             )
-            await bot(functions.contacts.BlockRequest(event.query.user_id))
+            await event.client(functions.contacts.BlockRequest(event.query.user_id))
             target = await event.client(GetFullUserRequest(event.query.user_id))
             ok = event.query.user_id
             first_name = html.escape(target.user.first_name)
             if first_name is not None:
                 first_name = first_name.replace("\u2060", "")
             first_name = html.escape(target.user.first_name)
-            await bot.send_message(
+            await event.client.send_message(
                 LOG_GP,
                 f"**Blocked**  [{first_name}](tg://user?id={ok}) \n\nReason:- Spam",
             )
 
 
-    @tgbot.on(callbackquery.CallbackQuery(data=compile(b"unmute")))
-    async def on_pm_click(event):
-        auth = await clients_list(Config, Hell, H2, H3, H4, H5)
-        hunter = (event.data_match.group(1)).decode("UTF-8")
-        hell = hunter.split("+")
-        if not event.sender_id == int(hell[0]):
-            return await event.answer("This Ain't For You!!", alert=True)
-        try:
-            await bot(GetParticipantRequest(int(hell[1]), int(hell[0])))
-        except UserNotParticipantError:
-            return await event.answer(
-                "You need to join the channel first.", alert=True
-            )
-        await bot.edit_permissions(
-            event.chat_id, int(hell[0]), send_message=True, until_date=None
-        )
-        await event.edit("Yay! You can chat now !!")
-
-
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"reopen")))
     async def reopn(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         if event.query.user_id in auth:
             current_page_number=0
@@ -370,6 +343,8 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
 
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"close")))
     async def on_plug_in_callback_query_handler(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         if event.query.user_id in auth:
             veriler = custom.Button.inline(f"{hell_emoji} Re-Open Menu {hell_emoji}", data="reopen")
@@ -381,6 +356,8 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
 
     @tgbot.on(callbackquery.CallbackQuery(data=compile(b"page\((.+?)\)")))
     async def page(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         page = int(event.data_match.group(1).decode("UTF-8"))
         veriler = button(page, CMD_HELP)
@@ -406,6 +383,8 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
         callbackquery.CallbackQuery(data=compile(b"Information\[(\d*)\]\((.*)\)"))
     )
     async def Information(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         page = int(event.data_match.group(1).decode("UTF-8"))
         commands = event.data_match.group(2).decode("UTF-8")
@@ -441,6 +420,8 @@ if Config.BOT_USERNAME is not None and tgbot is not None:
         callbackquery.CallbackQuery(data=compile(b"commands\[(.*)\[(\d*)\]\]\((.*)\)"))
     )
     async def commands(event):
+        cids = await client_id(event)
+        ForGo10God, HELL_USER, hell_mention = cids[0], cids[1], cids[2]
         auth = await clients_list(Config, Hell, H2, H3, H4, H5)
         cmd = event.data_match.group(1).decode("UTF-8")
         page = int(event.data_match.group(2).decode("UTF-8"))
