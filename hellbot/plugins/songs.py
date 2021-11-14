@@ -2,23 +2,23 @@ import asyncio
 import time
 
 from telethon.tl.types import DocumentAttributeAudio
-from youtube_dl import YoutubeDL
-from youtube_dl.utils import (
-    ContentTooShortError,
-    DownloadError,
-    ExtractorError,
-    GeoRestrictedError,
-    MaxDownloadsReached,
-    PostProcessingError,
-    UnavailableVideoError,
-    XAttrMetadataError,
-)
+# from youtube_dl import YoutubeDL
+# from youtube_dl.utils import (
+#     ContentTooShortError,
+#     DownloadError,
+#     ExtractorError,
+#     GeoRestrictedError,
+#     MaxDownloadsReached,
+#     PostProcessingError,
+#     UnavailableVideoError,
+#     XAttrMetadataError,
+# )
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 
 from . import *
 
-
-@hell_cmd(pattern="song ?(.*)")
+"""
+@hell_cmd(pattern="song(?:\s|$)([\s\S]*)")
 async def _(event):
     xyz = await client_id(event)
     ForGo10God, hell_mention = xyz[0], xyz[2]
@@ -78,7 +78,7 @@ async def _(event):
     os.remove(f"{hell_data['id']}.mp3")
 
 
-@hell_cmd(pattern="vsong ?(.*)")
+@hell_cmd(pattern="vsong(?:\s|$)([\s\S]*)")
 async def _(event):
     xyz = await client_id(event)
     ForGo10God, hell_mention = xyz[0], xyz[2]
@@ -129,7 +129,7 @@ async def _(event):
     )
     await hell.delete()
     os.remove(f"{hell_data['id']}.mp4")
-
+"""
 
 @hell_cmd(pattern="lyrics(?: |$)(.*)")
 async def nope(kraken):
@@ -154,7 +154,7 @@ async def nope(kraken):
         await uwu.edir(f"**ERROR !!** \n\n`{str(e)}`")
 
 
-@hell_cmd(pattern="lsong ?(.*)")
+@hell_cmd(pattern="lsong(?:\s|$)([\s\S]*)")
 async def _(event):
     hell_ = event.text[6:]
     xyz = await client_id(event)
@@ -177,7 +177,7 @@ async def _(event):
         await hell.edit("**ERROR 404 :** __NOT FOUND__")
 
 
-@hell_cmd(pattern="wsong ?(.*)")
+@hell_cmd(pattern="wsong(?:\s|$)([\s\S]*)")
 async def _(event):
     if not event.reply_to_msg_id:
         return await eor(event, "Reply to a mp3 file.")
@@ -206,7 +206,7 @@ async def _(event):
     await event.client.delete_messages(conv.chat_id, [first.id, second.id, third.id, fourth.id, fifth.id])
 
 
-@hell_cmd(pattern="spotify ?(.*)")
+@hell_cmd(pattern="spotify(?:\s|$)([\s\S]*)")
 async def _(event):
     text = event.text[9:]
     chat = "@spotifysavebot"
@@ -235,9 +235,9 @@ async def _(event):
 
 
 CmdHelp("songs").add_command(
-  "song", "<song name>", "Downloads the song from YouTube."
+  "song", "<song name>", "Downloads the song from YouTube. Disabled for railway deploys."
 ).add_command(
-  "vsong", "<song name>", "Downloads the Video Song from YouTube."
+  "vsong", "<song name>", "Downloads the Video Song from YouTube. Disabled for railway deploys."
 ).add_command(
   "lsong", "<song name>", "Sends the searched song in current chat.", "lsong Alone"
 ).add_command(
